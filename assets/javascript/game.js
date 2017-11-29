@@ -60,13 +60,16 @@ var changeGif = function(guesses){
 
 
 
-
 //show correct word and game over when guesses < 0
 var gameOver = function(guessss){
     if(guessss === 0){
         $('#game-over').text('Game over');
         for(var i=0; i < currentWord.length; i++){
-            $('#letter' + i).text(currentWord[i]);
+            //Don't fully understand why this works
+            (function (i) {
+                setTimeout(function () {
+                    $('#letter' + i).text(currentWord[i].toUpperCase());  //This part changes letter, other parts deal with delay
+            }, 1000*i)})(i);
         }
     }
 }
