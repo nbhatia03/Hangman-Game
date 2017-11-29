@@ -25,11 +25,30 @@ var populate = function(word){
     }
 }
 
+var compareLetter = function(letter){
+    //check if letter has been guessed
+    if(lettersGuessed.indexOf(letter) != -1){
+        console.log("Guess another letter!")
+    }else{
+        for (var i=0; i<currentWord.length; i++){
+            if(letter === currentWord[i]){
+                $("li:nth-child(" + (i+1) + ")").text(letter);
+            }
+        }
+        $('#lettersGuessed').append("<b>" + letter + "</br>");
+        lettersGuessed.push(letter);
+        guesses --;
+    }
+}
+
 console.log(pickWord(words));
 populate(currentWord);
 
 document.onkeydown = function(event){
     var guess = event.key;
     console.log(guess)
+    compareLetter(guess);
+
+    
 };
 
