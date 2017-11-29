@@ -1,5 +1,5 @@
-var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought'],
-    guesses = 10,
+var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought', 'saloon', 'cholera', 'dysentery', 'measels', 'noose'],
+    guesses = 2,
     wins = 0,
     lettersGuessed = [],
     currentWord = '';
@@ -17,18 +17,15 @@ var pickWord = function(wordList){
 var populate = function(word){
     console.log(word.length)
     for(var i = 0; i < word.length; i++){
-        console.log(i)
-        var node = document.createElement("LI");                 
-        var textnode = document.createTextNode("_______");         
-        node.appendChild(textnode); 
-        document.getElementById("word").appendChild(node);
+        $("#word").append("<li id='letter" + i + "'>____</li>");
+
     }
 }
 
 var compareLetter = function(letter){
     //check if letter has been guessed
     if(lettersGuessed.indexOf(letter) != -1){
-        console.log("Guess another letter!")
+        alert("Guess another letter!")
     }
     //compare letter to selected word
     else{
@@ -56,16 +53,39 @@ var checkLetter = function(uniCode, letter){
     }
 }
 
+//change cowboy gif
+var changeGif = function(guesses){
+
+}
+
+
+
+
+//show correct word and game over when guesses < 0
+var gameOver = function(guessss){
+    if(guessss === 0){
+        $('#game-over').text('Game over');
+        for(var i=0; i < currentWord.length; i++){
+            $('#letter' + i).text(currentWord[i]);
+        }
+    }
+}
+
+//game starts here
 console.log(pickWord(words));
 populate(currentWord);
+$('#guesses-left').text(guesses);
 
-document.onkeydown = function(event){
+document.onkeyup = function(event){
     var guess = event.key;
     var uniCode = event.keyCode;
     console.log(guess)
-    // compareLetter(guess);
     checkLetter(uniCode, guess);
-
-    
+    gameOver(guesses);  
 };
 
+
+//show correct word and game over when guesses < 0
+//show congrats when word is complete
+//play victory music
+//keep track of wins
