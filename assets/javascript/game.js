@@ -1,4 +1,4 @@
-var words = ['tumbleweed', 'horse', 'gallows'],
+var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought'],
     guesses = 10,
     wins = 0,
     lettersGuessed = [],
@@ -29,15 +29,30 @@ var compareLetter = function(letter){
     //check if letter has been guessed
     if(lettersGuessed.indexOf(letter) != -1){
         console.log("Guess another letter!")
-    }else{
+    }
+    //compare letter to selected word
+    else{
         for (var i=0; i<currentWord.length; i++){
+            //if letter is in the word, show it in DOM
             if(letter === currentWord[i]){
                 $("li:nth-child(" + (i+1) + ")").text(letter);
             }
         }
+        //update DOM and array with newly guessed letter
         $('#lettersGuessed').append("<b>" + letter + "</br>");
         lettersGuessed.push(letter);
         guesses --;
+        $('#guesses-left').text(guesses);
+    }
+}
+
+//make sure that the keypress was a letter
+var checkLetter = function(uniCode, letter){
+    if (uniCode >= 65 && uniCode <= 90) {
+        compareLetter(letter);
+    }
+    else{
+        alert("Guess a letter!")
     }
 }
 
@@ -46,8 +61,10 @@ populate(currentWord);
 
 document.onkeydown = function(event){
     var guess = event.key;
+    var uniCode = event.keyCode;
     console.log(guess)
-    compareLetter(guess);
+    // compareLetter(guess);
+    checkLetter(uniCode, guess);
 
     
 };
