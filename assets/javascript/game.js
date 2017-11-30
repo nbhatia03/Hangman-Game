@@ -1,8 +1,10 @@
 var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought', 'saloon', 'cholera', 'dysentery', 'measels', 'noose'],
-    guesses = 2,
+    guesses = 15,
     wins = 0,
     lettersGuessed = [],
-    currentWord = '';
+    currentWord = '',
+    liArray = [],
+    isComplete = false;
 
 
 //pick random word
@@ -17,11 +19,12 @@ var pickWord = function(wordList){
 var populate = function(word){
     console.log(word.length)
     for(var i = 0; i < word.length; i++){
-        $("#word").append("<li id='letter" + i + "'>____</li>");
+        $("#word").append("<li id='letter" + i + "'>_</li>");
 
     }
 }
 
+//see if the letter is correct
 var compareLetter = function(letter){
     //check if letter has been guessed
     if(lettersGuessed.indexOf(letter) != -1){
@@ -60,9 +63,13 @@ var changeGif = function(guesses){
 
 
 
-//show correct word and game over when guesses < 0
-var gameOver = function(guessss){
-    if(guessss === 0){
+//show correct word and game over when guesses = 0
+var gameOver = function(){
+    completedWord();
+    if(isComplete){
+        $('#game-over').text("YOU WIN!")
+        wins ++
+    }else{
         $('#game-over').text('Game over');
         for(var i=0; i < currentWord.length; i++){
             //Don't fully understand why this works
@@ -70,21 +77,64 @@ var gameOver = function(guessss){
                 setTimeout(function () {
                     $('#letter' + i).text(currentWord[i].toUpperCase());  //This part changes letter, other parts deal with delay
             }, 1000*i)})(i);
-        }
+        } 
+    } 
+}
+
+//see if entire word has been guessed correclty
+var completedWord = function(){
+    liArray = []
+    //make array of what has been guessed correctly
+    for (var i = 0; i < currentWord.length; i++){
+        liArray.push($('#letter' + i).text());
+    }
+    //check if the word is complete
+    isComplete = liArray.every(complete);
+}
+
+//used to check if the word is finished
+var complete = function(letter){
+    if (letter.charCodeAt(0) >= 97 && letter.charCodeAt(0) <= 122){
+        return true
+    }
+    else{
+        return false
     }
 }
 
+var winner = function(){
+    completedWord()
+    if(isComplete){
+        $('#game-over').text("YOU WIN!")
+        wins ++
+    }
+}
+
+var reset = function(){
+    guesses = 15;
+    lettersGuessed = [];
+    currentWord = '';
+    liArray = [];
+    isComplete = false;
+    pickWord(words);
+    populate(currentWord);
+    $('#guesses-left').text(guesses);
+}
+
 //game starts here
-console.log(pickWord(words));
-populate(currentWord);
-$('#guesses-left').text(guesses);
+reset();
 
 document.onkeyup = function(event){
     var guess = event.key;
     var uniCode = event.keyCode;
-    console.log(guess)
-    checkLetter(uniCode, guess);
-    gameOver(guesses);  
+    //if word isn't complete, game is playable
+    if(!isComplete){
+        checkLetter(uniCode, guess);
+        winner();
+        if(guesses === 0){
+            gameOver();  
+        }
+    }
 };
 
 
@@ -92,3 +142,17 @@ document.onkeyup = function(event){
 //show congrats when word is complete
 //play victory music
 //keep track of wins
+
+//use this for cowboy talking later
+// var showText = function (target, message, index, interval) {    
+//     if (index < message.length) { 
+//       $(target).append(message[index++]); 
+//       setTimeout(function () { showText(target, message, index, interval); }, interval); 
+//     } 
+//   }
+      
+//   $(function () { 
+   
+//     showText("#msg", "Hello, World!", 0, 200);    
+   
+//   }); 
