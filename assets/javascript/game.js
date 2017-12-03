@@ -64,8 +64,8 @@ var chooseGif = function(){
     }
 }
 
-var changeGif = setInterval(chooseGif, 7000);
-
+var changeGif;
+//*setting var equal to setInterval caused reset function to mess up*
 
 
 //show correct word and game over when guesses = 0
@@ -75,10 +75,11 @@ var gameOver = function(){
     clearInterval(changeGif);
     $('#reset-btn').removeClass("invisible");
     if(isComplete){
-        $('#game-over').text("YOU WIN!")
+        // $('#game-over').text("YOU WIN!")
         wins ++
+        $('#wins').text(wins)
     }else{
-        $('#game-over').text('Game over');
+        // $('#game-over').text('Game over');
         for(var i=0; i < currentWord.length; i++){
             //Don't fully understand why this works
             (function (i) {
@@ -114,53 +115,17 @@ var complete = function(letter){
 var winner = function(){
     completedWord();
     if(isComplete){
-        $('#game-over').text("YOU WIN!");
+        // $('#game-over').text("YOU WIN!");
         wins ++;
         clearInterval(cowboySpeech);
         clearInterval(changeGif);
         $('#msg').text("You've saved me!");
         $('#reset-btn').removeClass("invisible");
+        $('#wins').text(wins)
     }
 }
 
-//reset the game
-var reset = function(){
-    $('#word').text('');
-    $('#lettersGuessed').text('')
-    guesses = 15;
-    lettersGuessed = [];
-    currentWord = '';
-    liArray = [];
-    isComplete = false;
-    pickWord(words);
-    populate(currentWord);
-    $('#guesses-left').text(guesses);
-    $('#reset-btn').addClass("invisible");
-}
-
-//game starts here
-reset();
-
-document.onkeyup = function(event){
-    var guess = event.key;
-    var uniCode = event.keyCode;
-    //if word isn't complete, game is playable
-    if(!isComplete){
-        checkLetter(uniCode, guess);
-        winner();
-        if(guesses === 0){
-            gameOver();  
-        }
-    }
-};
-
-
-//show correct word and game over when guesses < 0
-//show congrats when word is complete
-//play victory music
-//keep track of wins
-
-//use this for cowboy talking later
+//COWBOY SPEECH -----------------------------------------
 var cowboyPhrases =[],
 cowboyPhrases1 =["Please help me!", "Can't wait to get out of here.", "I'm innocent, you've gotta help me!"],
 cowboyPhrases2 =["This noose is pretty snug...", "Need you to try just a little harder.", "I'm feeling a little dizzy..."],
@@ -198,4 +163,50 @@ var cowboySpeaking = function(){
     showText();
 }
 
-var cowboySpeech = setInterval(cowboySpeaking, interval);
+var cowboySpeech;
+//setting var equal to setInterval caused reset function to mess up
+
+//------------------------------------------------
+
+//reset the game
+var reset = function(){
+    $('#word').text('');
+    $('#lettersGuessed').text('')
+    guesses = 15;
+    lettersGuessed = [];
+    currentWord = '';
+    liArray = [];
+    isComplete = false;
+    pickWord(words);
+    populate(currentWord);
+    $('#guesses-left').text(guesses);
+    $('#reset-btn').addClass("invisible");
+    $('#cowboy-gif').attr("src", "assets/images/Normal.gif")
+
+    //Start intervals
+    cowboySpeech = setInterval(cowboySpeaking, interval);
+    changeGif = setInterval(chooseGif, 7000);
+    
+}
+
+//GAME STARTS HERE -------------------------------------------------
+reset();
+
+document.onkeyup = function(event){
+    var guess = event.key;
+    var uniCode = event.keyCode;
+    //if word isn't complete, game is playable
+    if(!isComplete){
+        checkLetter(uniCode, guess);
+        winner();
+        if(guesses === 0){
+            gameOver();  
+        }
+    }
+};
+
+
+//Overlay GAME OVER or YOU WIN on screen
+//show congrats when word is complete
+//play victory music
+//keep track of wins
