@@ -56,15 +56,24 @@ var checkLetter = function(uniCode, letter){
 }
 
 //change cowboy gif
-var changeGif = function(guesses){
-
+var chooseGif = function(){
+    if(guesses < 6){
+        $('#cowboy-gif').attr("src", "assets/images/Crying.gif")
+    }else if(guesses < 11){
+        $('#cowboy-gif').attr("src", "assets/images/Tugging-Noose.gif")
+    }
 }
+
+var changeGif = setInterval(chooseGif, 7000);
 
 
 
 //show correct word and game over when guesses = 0
 var gameOver = function(){
     completedWord();
+    clearInterval(cowboySpeech);
+    clearInterval(changeGif);
+    $('#reset-btn').removeClass("invisible");
     if(isComplete){
         $('#game-over').text("YOU WIN!")
         wins ++
@@ -94,24 +103,30 @@ var completedWord = function(){
 //used to check if the word is finished
 var complete = function(letter){
     if (letter.charCodeAt(0) >= 97 && letter.charCodeAt(0) <= 122){
-        return true
+        return true;
     }
     else{
-        return false
+        return false;
     }
 }
 
 //see if the player has won
 var winner = function(){
-    completedWord()
+    completedWord();
     if(isComplete){
-        $('#game-over').text("YOU WIN!")
-        wins ++
+        $('#game-over').text("YOU WIN!");
+        wins ++;
+        clearInterval(cowboySpeech);
+        clearInterval(changeGif);
+        $('#msg').text("You've saved me!");
+        $('#reset-btn').removeClass("invisible");
     }
 }
 
 //reset the game
 var reset = function(){
+    $('#word').text('');
+    $('#lettersGuessed').text('')
     guesses = 15;
     lettersGuessed = [];
     currentWord = '';
@@ -120,6 +135,7 @@ var reset = function(){
     pickWord(words);
     populate(currentWord);
     $('#guesses-left').text(guesses);
+    $('#reset-btn').addClass("invisible");
 }
 
 //game starts here
@@ -156,8 +172,7 @@ interval = 12000;
 var showText = function () { 
     if (index < message.length) { 
       $('#msg').append(message[index++]); 
-      console.log(index)
-      setTimeout(function () { showText(message, index); }, 200); 
+      setTimeout(function () { showText(message, index); }, 150); 
     } 
   }
       
@@ -175,10 +190,12 @@ var chooseMessage = function(){
     message = cowboyPhrases[ind];
 }
 
-setInterval(function(){ $('#msg').text('')}, interval);
 
-setInterval(chooseMessage, interval);
+var cowboySpeaking = function(){
+    $('#msg').text('');
+    chooseMessage();
+    index = 0;
+    showText();
+}
 
-setInterval(function(){index = 0}, interval);
-
-setInterval(showText, interval); 
+var cowboySpeech = setInterval(cowboySpeaking, interval);
