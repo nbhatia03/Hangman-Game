@@ -1,11 +1,10 @@
-var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought', 'saloon', 'cholera', 'dysentery', 'measels', 'noose'],
+var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought', 'saloon', 'cholera', 'dysentery', 'measles', 'noose'],
     guesses = 15,
     wins = 0,
     lettersGuessed = [],
     currentWord = '',
     liArray = [],
     isComplete = false;
-
 
 //pick random word
 var pickWord = function(wordList){
@@ -102,6 +101,7 @@ var complete = function(letter){
     }
 }
 
+//see if the player has won
 var winner = function(){
     completedWord()
     if(isComplete){
@@ -110,6 +110,7 @@ var winner = function(){
     }
 }
 
+//reset the game
 var reset = function(){
     guesses = 15;
     lettersGuessed = [];
@@ -144,15 +145,40 @@ document.onkeyup = function(event){
 //keep track of wins
 
 //use this for cowboy talking later
-// var showText = function (target, message, index, interval) {    
-//     if (index < message.length) { 
-//       $(target).append(message[index++]); 
-//       setTimeout(function () { showText(target, message, index, interval); }, interval); 
-//     } 
-//   }
+var cowboyPhrases =[],
+cowboyPhrases1 =["Please help me!", "Can't wait to get out of here.", "I'm innocent, you've gotta help me!"],
+cowboyPhrases2 =["This noose is pretty snug...", "Need you to try just a little harder.", "I'm feeling a little dizzy..."],
+cowboyPhrases3 =["Oh God, I have so many regrets", "Please, I have a family!", "Please God, not like this!", "The end is near...", "I should've married Sharon when I had the chance", "If you don't get this word right, you're essentially murdering me", "I will blame you for my death"],
+index = 0,
+message = '',
+interval = 12000;
+
+var showText = function () { 
+    if (index < message.length) { 
+      $('#msg').append(message[index++]); 
+      console.log(index)
+      setTimeout(function () { showText(message, index); }, 200); 
+    } 
+  }
       
-//   $(function () { 
    
-//     showText("#msg", "Hello, World!", 0, 200);    
-   
-//   }); 
+// showText("Hello, World!", 0);
+var chooseMessage = function(){
+    if(guesses > 11){
+        cowboyPhrases = cowboyPhrases1;
+    }else if (guesses < 6){
+        cowboyPhrases = cowboyPhrases3;
+    }else{
+        cowboyPhrases = cowboyPhrases2
+    }
+    var ind = Math.floor(Math.random()*cowboyPhrases.length);
+    message = cowboyPhrases[ind];
+}
+
+setInterval(function(){ $('#msg').text('')}, interval);
+
+setInterval(chooseMessage, interval);
+
+setInterval(function(){index = 0}, interval);
+
+setInterval(showText, interval); 
