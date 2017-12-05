@@ -27,7 +27,7 @@
   
       </div>
   
-      <div id="msg" class="box"></div>
+      <div id="msg" class="box invisible"></div>
     </div>
   
     <div class='col-md-6'>
@@ -39,12 +39,14 @@
   
       </div>
   
-      <div id="guess-box">
-        Remaining guesses: <b id="guesses-left"></b>
-      </div>
-  
-      <div>
-        Wins: <b id="wins">0</b>
+      <div id="info-bottom">
+        <div id="guess-box">
+          Remaining guesses: <b id="guesses-left"></b>
+        </div>
+    
+        <div>
+          Wins: <b id="wins">0</b>
+        </div>
       </div>
   
       <button class="btn-outline-primary invisible" onclick="reset()" id="reset-btn">Play again</button>

@@ -148,7 +148,7 @@ interval = 12000;
 var showText = function () { 
     if (index < message.length) { 
       $('#msg').append(message[index++]); 
-      setTimeout(function () { showText(message, index); }, 150); //Recursive, similar result from gameOver function's for loop with IIFE 
+      setTimeout(function () { showText(message, index); }, 100); //Recursive, similar result from gameOver function's for loop with IIFE 
     } 
   }
       
@@ -165,10 +165,14 @@ var chooseMessage = function(){
 }
 
 var cowboySpeaking = function(){
+    $('#msg').removeClass("invisible");
     $('#msg').text('');
     chooseMessage();
     index = 0;
     showText();
+    setTimeout(function(){
+        $('#msg').addClass("invisible")
+    }, interval-2000);
 }
 
 var cowboySpeech;
