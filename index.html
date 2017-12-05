@@ -13,27 +13,43 @@
   </head>
   <body>
 
-    <img src="assets/images/Normal.gif" alt="Distraught Cowboy" id="cowboy-gif">
-
-    <div id="msg"></div>
-
-    <ul id ="word">
-      
-    </ul>
-
-    <div id="lettersGuessed">
-
+  <div class='row container-fluid'>
+    <h1 id="title">HANGMAN</h1>
+  </div>
+  
+  <div class="row container">
+    <div class="col-md-6">
+      <div id="main-pics">
+        
+        <img src="assets/images/Normal.gif" alt="Distraught Cowboy" id="cowboy-gif">
+        <div id="game-over" class="invisible">GAME OVER</div>
+        <div id="winner" class="invisible">YOU WIN</div>
+  
+      </div>
+  
+      <div id="msg" class="box"></div>
     </div>
-
-    <div id="game-over">
-      Remaining guesses: <b id="guesses-left"></b>
+  
+    <div class='col-md-6'>
+      <ul id ="word">
+        
+      </ul>
+  
+      <div id="lettersGuessed">
+  
+      </div>
+  
+      <div id="guess-box">
+        Remaining guesses: <b id="guesses-left"></b>
+      </div>
+  
+      <div>
+        Wins: <b id="wins">0</b>
+      </div>
+  
+      <button class="btn-outline-primary invisible" onclick="reset()" id="reset-btn">Play again</button>
     </div>
-
-    <div>
-      Wins: <b id="wins">0</b>
-    </div>
-
-    <button class="btn-outline-primary invisible" onclick="reset()" id="reset-btn">Play again</button>
+  </div>
 
     <!-- Optional JavaScript -->
   

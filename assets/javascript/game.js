@@ -1,10 +1,10 @@
 var words = ['tumbleweed', 'horse', 'gallows', 'prospector', 'ranching', 'campfire', 'drought', 'saloon', 'cholera', 'dysentery', 'measles', 'noose'],
-    guesses = 15,
+    guesses,
     wins = 0,
-    lettersGuessed = [],
-    currentWord = '',
-    liArray = [],
-    isComplete = false;
+    lettersGuessed,
+    currentWord,
+    liArray,
+    isComplete;
 
 //pick random word
 var pickWord = function(wordList){
@@ -16,7 +16,6 @@ var pickWord = function(wordList){
 
 //make blanks for the word
 var populate = function(word){
-    console.log(word.length)
     for(var i = 0; i < word.length; i++){
         $("#word").append("<li id='letter" + i + "'>_</li>");
 
@@ -27,7 +26,12 @@ var populate = function(word){
 var compareLetter = function(letter){
     //check if letter has been guessed
     if(lettersGuessed.indexOf(letter) != -1){
-        alert("Guess another letter!")
+        var guessed =$('#lettersGuessed');
+        var letters = guessed.html();
+        guessed.text('Guess another letter!'); //breaks if key is pressed rapidly
+        setTimeout(function(){
+            guessed.html(letters)
+        }, 2000);
     }
     //compare letter to selected word
     else{
@@ -51,16 +55,21 @@ var checkLetter = function(uniCode, letter){
         compareLetter(letter);
     }
     else{
-        alert("Guess a letter!")
+        var guessed =$('#lettersGuessed');
+        var letters = guessed.html();
+        guessed.text("That's not a letter!");
+        setTimeout(function(){
+            guessed.html(letters)
+        }, 2000);
     }
 }
 
 //change cowboy gif
 var chooseGif = function(){
     if(guesses < 6){
-        $('#cowboy-gif').attr("src", "assets/images/Crying.gif")
+        $('#cowboy-gif').attr("src", "assets/images/Crying.gif");
     }else if(guesses < 11){
-        $('#cowboy-gif').attr("src", "assets/images/Tugging-Noose.gif")
+        $('#cowboy-gif').attr("src", "assets/images/Tugging-Noose.gif");
     }
 }
 
@@ -75,17 +84,19 @@ var gameOver = function(){
     clearInterval(changeGif);
     $('#reset-btn').removeClass("invisible");
     if(isComplete){
-        // $('#game-over').text("YOU WIN!")
-        wins ++
-        $('#wins').text(wins)
+        $('#cowboy-gif').attr("src", "assets/images/Winner.gif");
+        wins ++;
+        $('#wins').text(wins);
+        $('#winner').removeClass('invisible');
     }else{
-        // $('#game-over').text('Game over');
+        $('#cowboy-gif').attr("src", "assets/images/Game-Over.gif");
+        $('#game-over').removeClass('invisible');
+        $("body").addClass("over");
         for(var i=0; i < currentWord.length; i++){
-            //Don't fully understand why this works
             (function (i) {
                 setTimeout(function () {
-                    $('#letter' + i).text(currentWord[i].toUpperCase());  //This part changes letter, other parts deal with delay
-            }, 1000*i)})(i);
+                    $('#letter' + i).text(currentWord[i].toUpperCase());  
+            }, 700*i)})(i); //IIFE!!
         } 
     } 
 }
@@ -115,13 +126,13 @@ var complete = function(letter){
 var winner = function(){
     completedWord();
     if(isComplete){
-        // $('#game-over').text("YOU WIN!");
         wins ++;
         clearInterval(cowboySpeech);
         clearInterval(changeGif);
-        $('#msg').text("You've saved me!");
         $('#reset-btn').removeClass("invisible");
-        $('#wins').text(wins)
+        $('#wins').text(wins);
+        $('#winner').removeClass('invisible');
+        $('#cowboy-gif').attr("src", "assets/images/Winner.gif")
     }
 }
 
@@ -137,12 +148,10 @@ interval = 12000;
 var showText = function () { 
     if (index < message.length) { 
       $('#msg').append(message[index++]); 
-      setTimeout(function () { showText(message, index); }, 150); 
+      setTimeout(function () { showText(message, index); }, 150); //Recursive, similar result from gameOver function's for loop with IIFE 
     } 
   }
       
-   
-// showText("Hello, World!", 0);
 var chooseMessage = function(){
     if(guesses > 11){
         cowboyPhrases = cowboyPhrases1;
@@ -155,7 +164,6 @@ var chooseMessage = function(){
     message = cowboyPhrases[ind];
 }
 
-
 var cowboySpeaking = function(){
     $('#msg').text('');
     chooseMessage();
@@ -164,12 +172,13 @@ var cowboySpeaking = function(){
 }
 
 var cowboySpeech;
-//setting var equal to setInterval caused reset function to mess up
+//*setting var equal to setInterval caused reset function to mess up*
 
 //------------------------------------------------
 
 //reset the game
 var reset = function(){
+    $('#msg').text('');
     $('#word').text('');
     $('#lettersGuessed').text('')
     guesses = 15;
@@ -179,8 +188,11 @@ var reset = function(){
     isComplete = false;
     pickWord(words);
     populate(currentWord);
+    $('body').removeClass("over");
     $('#guesses-left').text(guesses);
     $('#reset-btn').addClass("invisible");
+    $('#game-over').addClass("invisible");
+    $('#winner').addClass('invisible');
     $('#cowboy-gif').attr("src", "assets/images/Normal.gif")
 
     //Start intervals
@@ -196,7 +208,7 @@ document.onkeyup = function(event){
     var guess = event.key;
     var uniCode = event.keyCode;
     //if word isn't complete, game is playable
-    if(!isComplete){
+    if(!isComplete && guesses > 0){
         checkLetter(uniCode, guess);
         winner();
         if(guesses === 0){
@@ -206,7 +218,9 @@ document.onkeyup = function(event){
 };
 
 
-//Overlay GAME OVER or YOU WIN on screen
-//show congrats when word is complete
-//play victory music
-//keep track of wins
+
+//put speech on img
+//play sound when cowboy talks 
+//play victory/ defeat music
+//fix lines 31/60
+//auto-resize Game Over/ You win text
