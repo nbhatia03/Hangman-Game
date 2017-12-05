@@ -27,10 +27,12 @@ var compareLetter = function(letter){
     //check if letter has been guessed
     if(lettersGuessed.indexOf(letter) != -1){
         var guessed =$('#lettersGuessed');
+        guessed.addClass("pause");
         var letters = guessed.html();
         guessed.text('Guess another letter!'); //breaks if key is pressed rapidly
         setTimeout(function(){
-            guessed.html(letters)
+            guessed.html(letters);
+            guessed.removeClass("pause");
         }, 2000);
     }
     //compare letter to selected word
@@ -42,7 +44,7 @@ var compareLetter = function(letter){
             }
         }
         //update DOM and array with newly guessed letter
-        $('#lettersGuessed').append("<b>" + letter + "</br>");
+        $('#lettersGuessed').append("<h3>" + letter + "</h3>");
         lettersGuessed.push(letter);
         guesses --;
         $('#guesses-left').text(guesses);
@@ -58,8 +60,10 @@ var checkLetter = function(uniCode, letter){
         var guessed =$('#lettersGuessed');
         var letters = guessed.html();
         guessed.text("That's not a letter!");
+        guessed.addClass("pause");
         setTimeout(function(){
             guessed.html(letters)
+            guessed.removeClass("pause")
         }, 2000);
     }
 }
@@ -170,6 +174,7 @@ var cowboySpeaking = function(){
     chooseMessage();
     index = 0;
     showText();
+    $('#msg').append("<i></i>"); //Maybe get rid of this later...
     setTimeout(function(){
         $('#msg').addClass("invisible")
     }, interval-2000);
@@ -212,7 +217,7 @@ document.onkeyup = function(event){
     var guess = event.key;
     var uniCode = event.keyCode;
     //if word isn't complete, game is playable
-    if(!isComplete && guesses > 0){
+    if(!isComplete && guesses > 0 && $("#lettersGuessed").hasClass("pause")===false) {
         checkLetter(uniCode, guess);
         winner();
         if(guesses === 0){
@@ -223,7 +228,6 @@ document.onkeyup = function(event){
 
 
 
-//put speech on img
 //play sound when cowboy talks 
 //play victory/ defeat music
 //fix lines 31/60
