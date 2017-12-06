@@ -48,7 +48,7 @@ body{
    max-width:100%;
    text-align: center;
    bottom: 50%;
-   font-size: 5em;
+   font-size: 4em;
    text-shadow:
    -1px -1px 0 rgb(243, 241, 241),
    1px -1px 0 rgb(240, 237, 237),
@@ -106,3 +106,19 @@ body{
     animation: bounce 0.5s ease-in-out 0 infinite alternate;
     float: right;
   }
+
+/*-------------------------------*/
+
+@media screen and (max-width: 1000px){
+    #game-over, #winner{
+        font-size: 2.5em;
+    }
+
+    #title{
+        font-size: 1em;
+    }
+
+    #lettersGuessed, #guess-box, #win-box{
+        font-size: 0.75em;
+    }    
+}

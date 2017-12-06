@@ -86,23 +86,29 @@ var gameOver = function(){
     completedWord();
     clearInterval(cowboySpeech);
     clearInterval(changeGif);
-    $('#reset-btn').removeClass("invisible");
+
     if(isComplete){
         $('#cowboy-gif').attr("src", "assets/images/Winner.gif");
         wins ++;
         $('#wins').text(wins);
         $('#winner').removeClass('invisible');
+        var sound = document.getElementById("sound-winner");
+        sound.play();
     }else{
         $('#cowboy-gif').attr("src", "assets/images/Game-Over.gif");
         $('#game-over').removeClass('invisible');
         $("body").addClass("over");
+        var sound = document.getElementById("sound-gameOver");
+        sound.play();
         for(var i=0; i < currentWord.length; i++){
             (function (i) {
                 setTimeout(function () {
                     $('#letter' + i).text(currentWord[i].toUpperCase());  
             }, 700*i)})(i); //IIFE!!
         } 
-    } 
+    }
+    $('#msg').addClass('invisible');
+    setTimeout(function(){$('#reset-btn').removeClass("invisible")}, 5000) ;
 }
 
 //see if entire word has been guessed correclty
@@ -133,10 +139,15 @@ var winner = function(){
         wins ++;
         clearInterval(cowboySpeech);
         clearInterval(changeGif);
-        $('#reset-btn').removeClass("invisible");
         $('#wins').text(wins);
         $('#winner').removeClass('invisible');
-        $('#cowboy-gif').attr("src", "assets/images/Winner.gif")
+        $('#msg').addClass('invisible');
+        $('#cowboy-gif').attr("src", "assets/images/Winner.gif");
+        setTimeout(function(){
+            $('#reset-btn').removeClass("invisible");
+        }, 2000);
+        var sound = document.getElementById("sound-winner");
+        sound.play();
     }
 }
 
@@ -169,6 +180,9 @@ var chooseMessage = function(){
 }
 
 var cowboySpeaking = function(){
+    var sound = document.getElementById("sound-speech");
+    sound.volume = 0.1;
+    sound.play();
     $('#msg').removeClass("invisible");
     $('#msg').text('');
     chooseMessage();
@@ -230,5 +244,4 @@ document.onkeyup = function(event){
 
 //play sound when cowboy talks 
 //play victory/ defeat music
-//fix lines 31/60
 //auto-resize Game Over/ You win text
